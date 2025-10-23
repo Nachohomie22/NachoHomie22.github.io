@@ -12,16 +12,25 @@
       --border: #1e40af;
       --text:   #e5e7eb;
       --muted:  #9ca3af;
+
+      /* Logo size used by the bouncing math */
+      --logoW: 320px;   /* increase/decrease to change size */
+      --logoH: 220px;   /* approximate height of your PNG */
+      --ctaH: 60px;     /* sticky contact bar height (top offset) */
     }
+    @media (max-width: 600px) {
+      :root { --logoW: 260px; --logoH: 180px; --ctaH: 60px; }
+    }
+
     html, body {
       height: 100%;
       margin: 0;
-      overflow: hidden; /* make bounce use full screen */
       font-family: system-ui, Arial, sans-serif;
       color: var(--text);
       background: url('Gallery/background.png') no-repeat center center fixed;
       background-size: cover;
     }
+    /* overlay to deepen contrast */
     body::before {
       content: "";
       position: fixed;
@@ -30,17 +39,12 @@
       z-index: 0;
     }
 
-    /* ---- CONTACT BAR ---- */
+    /* ---- STICKY CONTACT BAR ---- */
     .cta-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      top: 0; left: 0; right: 0;
       z-index: 10;
-      display: flex;
-      gap: .5rem;
-      justify-content: center;
-      align-items: center;
+      display: flex; gap: .5rem; justify-content: center; align-items: center;
       padding: .6rem .8rem;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(6px);
@@ -52,57 +56,63 @@
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,.15);
       background: linear-gradient(180deg, rgba(147,197,253,.25), rgba(147,197,253,.15));
-      color: #e5e7eb;
-      text-decoration: none;
-      font-weight: 600;
+      color: #e5e7eb; text-decoration: none; font-weight: 600;
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
     }
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
-    }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
 
-    /* ---- BOUNCING LOGO ---- */
+    /* ---- BOUNCE STAGE (separate layer above content) ---- */
+    .bounce-stage {
+      position: fixed;
+      top: var(--ctaH);   /* keep clear of the contact bar */
+      left: 0; right: 0; bottom: 0;
+      z-index: 6;         /* above content, below CTA */
+      pointer-events: none; /* let clicks pass through to the page */
+      overflow: hidden;     /* keep the logo inside */
+    }
     .logo {
       position: absolute;
-      width: clamp(240px, 32vw, 340px);
-      height: auto;
-      animation: bounceLogo 12s linear infinite;
-      filter: drop-shadow(0 0 10px #60a5fa) drop-shadow(0 0 20px #3b82f6);
-      z-index: 5;
+      width: var(--logoW);
+      height: auto;          /* actual height approximated by --logoH for animation math */
+      /* smooth glow so it’s visible on dark bg */
+      filter: drop-shadow(0 0 10px #93c5fd) drop-shadow(0 0 18px #60a5fa);
+      /* Independent axis animations avoid “jumping” */
+      animation:
+        moveX 11s linear 0s infinite alternate,
+        moveY 9s  linear 0s infinite alternate;
     }
-
-    @keyframes bounceLogo {
-      0%   { top: 0; left: 0; }
-      25%  { top: 0; left: calc(100% - 340px); }
-      50%  { top: calc(100% - 260px); left: calc(100% - 340px); }
-      75%  { top: calc(100% - 260px); left: 0; }
-      100% { top: 0; left: 0; }
+    /* Travel from 0 to (container - logo) along each axis */
+    @keyframes moveX {
+      from { left: 0; }
+      to   { left: calc(100% - var(--logoW)); }
+    }
+    @keyframes moveY {
+      from { top: 0; }
+      to   { top: calc(100% - var(--logoH)); }
     }
 
     /* ---- MAIN CONTENT ---- */
     main {
       position: relative;
-      z-index: 1;
-      margin-top: 70px; /* offset contact bar */
-      padding: 2rem 1rem 4rem;
-      text-align: center;
-      overflow-y: auto;
-      height: calc(100vh - 70px);
-      box-sizing: border-box;
+      z-index: 1;  /* below the bounce stage */
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: calc(var(--ctaH) + 1.2rem) 1rem 4rem; /* push below contact bar */
     }
 
     h1 {
       font-size: clamp(1.8rem, 4vw, 3rem);
-      margin: 0.5rem 0 0;
+      margin: .25rem 0 0;
       letter-spacing: .5px;
+      text-align: center;
     }
     .tagline {
+      text-align: center;
       margin: .25rem 0 2rem;
       color: var(--muted);
     }
 
-    /* ---- CARDS / SECTIONS ---- */
+    /* ---- SECTIONS ---- */
     .card {
       background: rgba(0,0,0,.38);
       border: 1px solid rgba(255,255,255,.08);
@@ -110,7 +120,6 @@
       padding: 1.25rem;
       backdrop-filter: blur(4px);
       box-shadow: 0 8px 30px rgba(0,0,0,.25);
-      margin-bottom: 2rem;
     }
     h2 {
       margin: 0 0 .75rem;
@@ -121,9 +130,7 @@
     p { line-height: 1.6; }
 
     /* ---- GALLERY ---- */
-    .gallery {
-      margin-top: 2rem;
-    }
+    .gallery { margin-top: 2rem; }
     .pairs {
       display: grid;
       grid-template-columns: 1fr;
@@ -147,14 +154,12 @@
       transition: transform .18s ease, box-shadow .18s ease;
       background: #0b0f19;
     }
-    .pair img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-    }
+    .pair img:hover { transform: scale(1.03); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
 
     /* ---- FOOTER ---- */
     footer {
       margin-top: 3rem;
+      text-align: center;
       color: var(--muted);
       font-size: .95rem;
     }
@@ -169,8 +174,10 @@
     <a class="cta-btn" href="mailto:immaculateprofessions@gmail.com">✉️ Email Us</a>
   </div>
 
-  <!-- Bouncing Logo -->
-  <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo" />
+  <!-- Bouncing logo stage (separate layer) -->
+  <div class="bounce-stage">
+    <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo" />
+  </div>
 
   <!-- Page Content -->
   <main>
