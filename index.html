@@ -3,38 +3,146 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ronnie’s Construction</title>
+  <title>Immaculate Profession's Construction</title>
+
   <style>
-    body {
-      font-family: system-ui, Arial, sans-serif;
+    /* ---- GLOBAL ---- */
+    html, body {
+      height: 100%;
       margin: 0;
-      background: #f9fafb;
-      color: #111827;
+      font-family: system-ui, Arial, sans-serif;
+      color: #e5e7eb;
+      background: url('Gallery/background.png') no-repeat center center fixed;
+      background-size: cover;
     }
-    header {
-      background: #1e40af;
-      color: white;
-      padding: 2rem 1rem;
+    body::before {
+      /* dark overlay to make text pop */
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55);
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
       text-align: center;
     }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
+
+    /* ---- LOGO ---- */
+    .logo {
+      width: 200px;
+      margin: 2rem auto 1rem;
+      display: block;
+      animation: float 6s ease-in-out infinite;
     }
-    h1 { margin: 0; }
-    p { line-height: 1.6; }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ---- HEADINGS ---- */
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 0.5rem 0 0;
+      letter-spacing: 1px;
+    }
+    h2 {
+      margin-top: 3rem;
+      font-size: 1.6rem;
+      color: #93c5fd;
+    }
+
+    /* ---- ABOUT ---- */
+    .about {
+      background: rgba(0,0,0,0.4);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ---- GALLERY ---- */
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .pair {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      width: 300px;
+    }
+    .pair img {
+      width: 100%;
+      border-radius: 8px;
+      border: 2px solid #1e40af;
+    }
+    @media (min-width:700px){
+      .pair { flex-direction: row; width: auto; }
+      .pair img { width: 300px; }
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      margin-top: 4rem;
+      color: #9ca3af;
+      font-size: .9rem;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Ronnie’s Construction</h1>
-    <p>Quality Work • Honest Pricing • Local Expertise</p>
-  </header>
 
+  <!-- Header -->
   <main>
-    <h2>Welcome</h2>
-    <p>We provide reliable, high-quality construction and renovation services for homes and businesses. This is our brand-new site — more photos and details coming soon!</p>
+    <img src="Gallery/Logo.png" alt="Immaculate Professions Logo" class="logo">
+    <h1>Immaculate Profession's Construction</h1>
+    <p>Building Your Dreams — Serving the Tri-Cities</p>
+
+    <!-- About -->
+    <section class="about">
+      <h2>About Us</h2>
+      <p>We provide quality construction, renovation, and finishing services across the Tri-Cities area. From tile and drywall to flooring and painting — our mission is simple: immaculate work, honest prices, and satisfied clients.</p>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery" id="gallery">
+      <h2>Before & After Gallery</h2>
+
+      <div class="pair">
+        <img src="Gallery/before1.jpeg" alt="Before 1">
+        <img src="Gallery/after1.jpeg" alt="After 1">
+      </div>
+      <div class="pair">
+        <img src="Gallery/before2.jpeg" alt="Before 2">
+        <img src="Gallery/after2.jpeg" alt="After 2">
+      </div>
+      <div class="pair">
+        <img src="Gallery/before3.jpeg" alt="Before 3">
+        <img src="Gallery/after3.jpeg" alt="After 3">
+      </div>
+      <div class="pair">
+        <img src="Gallery/before4.jpeg" alt="Before 4">
+        <img src="Gallery/after4.jpeg" alt="After 4">
+      </div>
+    </section>
+
+    <footer>
+      <p>Free Estimates • Affordable Prices</p>
+      <p>Call David Hudson — 423-329-0945 • immaculateprofessions@gmail.com</p>
+      <p>© <span id="year"></span> Immaculate Profession’s Construction</p>
+    </footer>
   </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
