@@ -21,7 +21,6 @@
       background: url('Gallery/background.png') no-repeat center center fixed;
       background-size: cover;
     }
-    /* overlay to keep text readable on busy backgrounds */
     body::before {
       content: "";
       position: fixed;
@@ -36,6 +35,39 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 2rem 1rem 4rem;
+    }
+
+    /* ---- CONTACT BAR ---- */
+    .cta-bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      align-items: center;
+      padding: .6rem .8rem;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: .6rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: linear-gradient(180deg, rgba(147,197,253,.25), rgba(147,197,253,.15));
+      color: #e5e7eb;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .cta-btn:active {
+      transform: translateY(0);
     }
 
     /* ---- HEADER / LOGO ---- */
@@ -126,6 +158,12 @@
 <body>
 
   <main>
+    <!-- Sticky Call/Email Bar -->
+    <div class="cta-bar">
+      <a class="cta-btn" href="tel:+14233290945">📞 Call: 423-329-0945</a>
+      <a class="cta-btn" href="mailto:immaculateprofessions@gmail.com">✉️ Email Us</a>
+    </div>
+
     <!-- Header / Hero -->
     <div class="logo-wrap">
       <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo" />
