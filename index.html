@@ -6,144 +6,172 @@
   <title>Immaculate Profession's Construction</title>
 
   <style>
-    /* ---------- THEME & RESPONSIVE CONSTANTS ---------- */
-    :root{
-      --accent:#93c5fd; --border:#1e40af; --text:#e5e7eb; --muted:#9ca3af;
+    :root {
+      --accent: #93c5fd;
+      --border: #1e40af;
+      --text:   #e5e7eb;
+      --muted:  #9ca3af;
 
-      /* Sticky contact bar height */
-      --ctaH: 64px;
-
-      /* Logo scales by viewport with safe min/max for phone & desktop */
-      --logoW: clamp(200px, 28vw, 360px);
-      /* Approximate aspect ratio of your PNG (tweak if needed) */
-      --logoH: calc(var(--logoW) * 0.70);
-    }
-    @media (max-width: 420px){
-      :root{ --ctaH: 60px; }
+      --ctaH: 64px;  /* sticky contact bar height */
+      --logoW: clamp(200px, 28vw, 340px);
+      --logoH: calc(var(--logoW) * 0.7);
     }
 
-    /* ---------- PAGE BACKGROUND ---------- */
-    html, body{
-      height:100%; margin:0;
+    html, body {
+      margin: 0;
+      height: 100%;
       font-family: system-ui, Arial, sans-serif;
-      color:var(--text);
+      color: var(--text);
       background: url('Gallery/background.png') no-repeat center center fixed;
       background-size: cover;
     }
-    body::before{
-      content:"";
-      position:fixed; inset:0; z-index:0;
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
       background: rgba(0,0,0,.55);
+      z-index: 0;
     }
 
-    /* ---------- STICKY CONTACT BAR ---------- */
-    .cta-bar{
-      position:fixed; top:0; left:0; right:0; height:var(--ctaH);
-      display:flex; gap:.5rem; justify-content:center; align-items:center;
+    /* --- Sticky contact bar --- */
+    .cta-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--ctaH);
+      display: flex; gap: .5rem;
+      justify-content: center; align-items: center;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      z-index:10;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      z-index: 10;
     }
-    .cta-btn{
-      display:inline-block; padding:.6rem 1rem; border-radius:12px;
-      border:1px solid rgba(255,255,255,.15);
+    .cta-btn {
+      padding: .6rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
       background: linear-gradient(180deg, rgba(147,197,253,.25), rgba(147,197,253,.15));
-      color:#e5e7eb; text-decoration:none; font-weight:600;
+      color: #e5e7eb; text-decoration: none; font-weight: 600;
       transition: transform .15s ease, box-shadow .15s ease;
     }
-    .cta-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px rgba(0,0,0,.25); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
 
-    /* ---------- FULL-SCREEN BOUNCE STAGE (under CTA, above content) ---------- */
-    .bounce-stage{
-      position:fixed;
-      top:var(--ctaH); left:0; right:0; bottom:0;
-      overflow:hidden; pointer-events:none;
-      z-index:6; /* above content, below CTA */
+    /* --- HERO SECTION (logo bounce box) --- */
+    .hero {
+      position: relative;
+      height: 300px; /* area for logo to move within */
+      overflow: hidden;
+      margin-top: var(--ctaH);
+      border-bottom: 1px solid rgba(255,255,255,.15);
     }
-    .logo{
-      position:absolute;
-      width:var(--logoW); height:auto;
-      /* readable on dark bg */
+
+    .logo {
+      position: absolute;
+      width: var(--logoW);
+      height: auto;
       filter: drop-shadow(0 0 10px #93c5fd) drop-shadow(0 0 18px #60a5fa);
-      /* independent axis animations for smooth “DVD” bounces */
       animation:
-        moveX 12s linear infinite alternate,
-        moveY 10s linear infinite alternate;
-    }
-    @keyframes moveX{
-      from{ left:0; }
-      to  { left:calc(100% - var(--logoW)); }
-    }
-    @keyframes moveY{
-      from{ top:0; }
-      to  { top:calc(100% - var(--logoH)); }
+        moveX 9s linear infinite alternate,
+        moveY 7s linear infinite alternate;
     }
 
-    /* Respect users who prefer reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .logo{ animation:none; }
+    @keyframes moveX {
+      from { left: 0; }
+      to { left: calc(100% - var(--logoW)); }
+    }
+    @keyframes moveY {
+      from { top: 0; }
+      to { top: calc(100% - var(--logoH)); }
     }
 
-    /* ---------- MAIN CONTENT ---------- */
-    main{
-      position:relative; z-index:1;
-      max-width:1100px; margin:0 auto;
-      padding: calc(var(--ctaH) + 1.2rem) 1rem 4rem;
+    /* --- Main content --- */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
     }
-    h1{
-      font-size:clamp(1.8rem,4vw,3rem);
-      margin:.25rem 0 0; letter-spacing:.5px; text-align:center;
-    }
-    .tagline{ text-align:center; margin:.25rem 0 2rem; color:var(--muted); }
 
-    .card{
+    h1 {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 1rem 0 0;
+    }
+    .tagline {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .card {
       background: rgba(0,0,0,.38);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px; padding:1.25rem;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 1.25rem;
       backdrop-filter: blur(4px);
-      box-shadow:0 8px 30px rgba(0,0,0,.25);
+      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+      margin-bottom: 2rem;
     }
-    h2{ margin:0 0 .75rem; color:var(--accent); font-size:clamp(1.25rem,3.2vw,1.6rem); letter-spacing:.5px; }
-    p{ line-height:1.6; }
 
-    /* ---------- GALLERY ---------- */
-    .gallery{ margin-top:2rem; }
-    .pairs{
-      display:grid; grid-template-columns:1fr; gap:1rem;
+    h2 {
+      color: var(--accent);
+      margin-top: 0;
     }
-    @media (min-width:700px){
-      .pairs{ grid-template-columns:repeat(2, minmax(0,1fr)); }
-    }
-    .pair{
-      display:grid; grid-template-columns:1fr 1fr; gap:.5rem; align-items:start;
-    }
-    .pair img{
-      width:100%; border-radius:10px; border:2px solid var(--border);
-      display:block; object-fit:cover; background:#0b0f19;
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .pair img:hover{ transform:scale(1.03); box-shadow:0 10px 24px rgba(0,0,0,.35); }
 
-    /* ---------- FOOTER ---------- */
-    footer{ margin-top:3rem; text-align:center; color:var(--muted); font-size:.95rem; }
-    footer p{ margin:.25rem 0; }
+    .gallery {
+      margin-top: 2rem;
+    }
+
+    .pairs {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 700px) {
+      .pairs { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+
+    .pair img {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      object-fit: cover;
+      background: #0b0f19;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .pair img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--muted);
+    }
   </style>
 </head>
-<body>
 
-  <!-- Sticky Call/Email Bar -->
+<body>
   <div class="cta-bar">
     <a class="cta-btn" href="tel:+14233290945">📞 Call: 423-329-0945</a>
     <a class="cta-btn" href="mailto:immaculateprofessions@gmail.com">✉️ Email Us</a>
   </div>
 
-  <!-- Bouncing logo on its own stage -->
-  <div class="bounce-stage">
-    <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo" />
-  </div>
+  <!-- HERO bounce area -->
+  <section class="hero">
+    <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo">
+  </section>
 
-  <!-- Content -->
   <main>
     <h1>Immaculate Profession's Construction</h1>
     <p class="tagline">Building Your Dreams — Serving the Tri-Cities</p>
@@ -160,20 +188,20 @@
       <h2>Before &amp; After Gallery</h2>
       <div class="pairs">
         <div class="pair">
-          <img src="Gallery/Job_Photos/before1.jpeg" alt="Before 1" loading="lazy">
-          <img src="Gallery/Job_Photos/after1.jpeg"  alt="After 1"  loading="lazy">
+          <img src="Gallery/Job_Photos/before1.jpeg" alt="Before 1">
+          <img src="Gallery/Job_Photos/after1.jpeg"  alt="After 1">
         </div>
         <div class="pair">
-          <img src="Gallery/Job_Photos/before2.jpeg" alt="Before 2" loading="lazy">
-          <img src="Gallery/Job_Photos/after2.jpeg"  alt="After 2"  loading="lazy">
+          <img src="Gallery/Job_Photos/before2.jpeg" alt="Before 2">
+          <img src="Gallery/Job_Photos/after2.jpeg"  alt="After 2">
         </div>
         <div class="pair">
-          <img src="Gallery/Job_Photos/before3.jpeg" alt="Before 3" loading="lazy">
-          <img src="Gallery/Job_Photos/after3.jpeg"  alt="After 3"  loading="lazy">
+          <img src="Gallery/Job_Photos/before3.jpeg" alt="Before 3">
+          <img src="Gallery/Job_Photos/after3.jpeg"  alt="After 3">
         </div>
         <div class="pair">
-          <img src="Gallery/Job_Photos/before4.jpeg" alt="Before 4" loading="lazy">
-          <img src="Gallery/Job_Photos/after4.jpeg"  alt="After 4"  loading="lazy">
+          <img src="Gallery/Job_Photos/before4.jpeg" alt="Before 4">
+          <img src="Gallery/Job_Photos/after4.jpeg"  alt="After 4">
         </div>
       </div>
     </section>
@@ -186,7 +214,8 @@
   </main>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
