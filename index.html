@@ -7,7 +7,11 @@
 
   <style>
     :root {
-      --accent:#93c5fd; --border:#22c55e; --text:#e5e7eb; --muted:#9ca3af;
+      --accent:#93c5fd;
+      --border:#22c55e;      /* green borders */
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+
       --ctaH:64px;
       --logoW:clamp(200px,28vw,340px);
       --logoH:calc(var(--logoW)*0.7);
@@ -85,50 +89,29 @@
       display:grid; grid-template-columns:1fr 1fr; gap:.5rem;
     }
     .pair img{
-      width:100%; border-radius:10px; border:2px solid var(--border);
+      width:100%; border-radius:10px;
+      border:2px solid var(--border);        /* green border */
       object-fit:cover; background:#0b0f19;
       transition:transform .18s ease, box-shadow .18s ease;
+      box-shadow:0 0 0 0 rgba(34,197,94,0);
       cursor:zoom-in;
     }
-    .pair img:hover{ transform:scale(1.03); box-shadow:0 10px 24px rgba(0,0,0,.35); }
+    .pair img:hover{
+      transform:scale(1.03);
+      box-shadow:0 0 16px 2px rgba(34,197,94,.35); /* green glow on hover */
+    }
 
     /* Lightbox */
     .lightbox{
-      position:fixed; inset:0; z-index:20; display:none;
-      background:rgba(0,0,0,.85);
+      position:fixed; inset:0; z-index:20; display:none; background:rgba(0,0,0,.85);
     }
     .lightbox.open{ display:flex; align-items:center; justify-content:center; }
-    .lb-inner{
-      position:relative; max-width:92vw; max-height:85vh;
-      display:flex; align-items:center; justify-content:center;
-      gap:1rem; padding:1rem;
-    }
-    .lb-img{
-      max-width:90vw; max-height:80vh; border-radius:10px;
-      border:2px solid rgba(255,255,255,.2);
-      box-shadow:0 20px 60px rgba(0,0,0,.55);
-    }
-    .lb-caption{
-      position:absolute; left:0; right:0; bottom:-2.2rem;
-      color:#cbd5e1; text-align:center; font-size:.95rem;
-    }
-    .lb-btn{
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25);
-      width:44px; height:44px; border-radius:999px; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      backdrop-filter:blur(4px);
-    }
+    .lb-inner{ position:relative; max-width:92vw; max-height:85vh; display:flex; align-items:center; justify-content:center; gap:1rem; padding:1rem; }
+    .lb-img{ max-width:90vw; max-height:80vh; border-radius:10px; border:2px solid rgba(255,255,255,.2); box-shadow:0 20px 60px rgba(0,0,0,.55); }
+    .lb-caption{ position:absolute; left:0; right:0; bottom:-2.2rem; color:#cbd5e1; text-align:center; font-size:.95rem; }
+    .lb-btn{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25); width:44px; height:44px; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
     .lb-prev{ left:-.5rem; } .lb-next{ right:-.5rem; }
-    .lb-close{
-      position:absolute; top:-.5rem; right:-.5rem;
-      width:40px; height:40px; border-radius:999px; cursor:pointer;
-      background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25);
-      display:flex; align-items:center; justify-content:center;
-    }
-    @media (max-width:520px){
-      .lb-prev{ left:.25rem; } .lb-next{ right:.25rem; }
-    }
+    .lb-close{ position:absolute; top:-.5rem; right:-.5rem; width:40px; height:40px; border-radius:999px; cursor:pointer; background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center; }
 
     footer{ margin-top:3rem; text-align:center; color:var(--muted); }
     footer p{ margin:.25rem 0; }
@@ -161,24 +144,7 @@
 
     <section class="gallery">
       <h2>Before &amp; After Gallery</h2>
-      <div class="pairs" id="galleryPairs">
-        <div class="pair">
-          <img src="Gallery/Job_Photos/before1.jpeg" alt="Before 1" loading="lazy">
-          <img src="Gallery/Job_Photos/after1.jpeg"  alt="After 1"  loading="lazy">
-        </div>
-        <div class="pair">
-          <img src="Gallery/Job_Photos/before2.jpeg" alt="Before 2" loading="lazy">
-          <img src="Gallery/Job_Photos/after2.jpeg"  alt="After 2"  loading="lazy">
-        </div>
-        <div class="pair">
-          <img src="Gallery/Job_Photos/before3.jpeg" alt="Before 3" loading="lazy">
-          <img src="Gallery/Job_Photos/after3.jpeg"  alt="After 3"  loading="lazy">
-        </div>
-        <div class="pair">
-          <img src="Gallery/Job_Photos/before4.jpeg" alt="Before 4" loading="lazy">
-          <img src="Gallery/Job_Photos/after4.jpeg"  alt="After 4"  loading="lazy">
-        </div>
-      </div>
+      <div class="pairs" id="galleryPairs"><!-- built by JS --></div>
     </section>
 
     <footer>
@@ -203,66 +169,108 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // -------- Lightbox logic --------
-    const imgs = Array.from(document.querySelectorAll('.gallery img'));
-    const lb   = document.getElementById('lightbox');
-    const lbImg= document.getElementById('lbImg');
-    const lbCap= document.getElementById('lbCap');
-    const lbPrev=document.getElementById('lbPrev');
-    const lbNext=document.getElementById('lbNext');
-    const lbClose=document.getElementById('lbClose');
+    // ===== Dynamic gallery builder =====
+    const MAX_PAIRS = 30; // change this if you want more potential slots
+    const FOLDER = 'Gallery/Job_Photos';
+    const EXT = 'jpeg'; // change to 'jpg' if needed
+    const gallery = document.getElementById('galleryPairs');
 
+    function imgExists(src){
+      return new Promise(resolve=>{
+        const i = new Image();
+        i.onload = ()=> resolve(true);
+        i.onerror = ()=> resolve(false);
+        i.src = src;
+      });
+    }
+
+    async function buildGallery(){
+      const createdImgs = [];
+      for(let n=1; n<=MAX_PAIRS; n++){
+        const before = `${FOLDER}/before${n}.${EXT}`;
+        const after  = `${FOLDER}/after${n}.${EXT}`;
+        const [okB, okA] = await Promise.all([imgExists(before), imgExists(after)]);
+        if(okB && okA){
+          const pair = document.createElement('div');
+          pair.className = 'pair';
+          const bImg = document.createElement('img');
+          bImg.src = before; bImg.alt = `Before ${n}`; bImg.loading = 'lazy';
+          const aImg = document.createElement('img');
+          aImg.src = after;  aImg.alt = `After ${n}`;  aImg.loading = 'lazy';
+          pair.appendChild(bImg);
+          pair.appendChild(aImg);
+          gallery.appendChild(pair);
+          createdImgs.push(bImg, aImg);
+        }
+      }
+      setupLightbox(createdImgs);
+    }
+
+    // ===== Lightbox (works with dynamically added images) =====
+    const lb    = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCap');
+    const lbPrev= document.getElementById('lbPrev');
+    const lbNext= document.getElementById('lbNext');
+    const lbClose= document.getElementById('lbClose');
+    let lbList = [];
     let idx = 0;
-    const open = (i)=>{
+
+    function open(i){
       idx = i;
-      const el = imgs[idx];
+      const el = lbList[idx];
       lbImg.src = el.src;
       lbImg.alt = el.alt || '';
       lbCap.textContent = el.alt || '';
       lb.classList.add('open');
       lb.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
-    };
-    const close = ()=>{
+    }
+    function close(){
       lb.classList.remove('open');
       lb.setAttribute('aria-hidden','true');
       document.body.style.overflow = '';
-      // Prevent lingering image on slow networks
-      setTimeout(()=>{ lbImg.src = ''; }, 150);
-    };
-    const prev = ()=> open((idx - 1 + imgs.length) % imgs.length);
-    const next = ()=> open((idx + 1) % imgs.length);
+      setTimeout(()=>{ lbImg.src=''; }, 150);
+    }
+    const prev = ()=> open((idx - 1 + lbList.length) % lbList.length);
+    const next = ()=> open((idx + 1) % lbList.length);
 
-    imgs.forEach((img,i)=>{
-      img.addEventListener('click', ()=> open(i));
-      img.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ open(i);} });
-      img.tabIndex = 0; // keyboard focusable
-    });
+    function setupLightbox(imgNodes){
+      lbList = imgNodes;
+      lbList.forEach((img,i)=>{
+        img.addEventListener('click', ()=> open(i));
+        img.tabIndex = 0;
+        img.addEventListener('keydown', e=>{
+          if(e.key==='Enter' || e.key===' ') open(i);
+        });
+      });
+    }
 
     lbPrev.addEventListener('click', prev);
     lbNext.addEventListener('click', next);
     lbClose.addEventListener('click', close);
-    lb.addEventListener('click', (e)=>{ if(e.target === lb) close(); });
-
-    // Keyboard controls
-    window.addEventListener('keydown', (e)=>{
+    lb.addEventListener('click', e=>{ if(e.target===lb) close(); });
+    window.addEventListener('keydown', e=>{
       if(!lb.classList.contains('open')) return;
-      if(e.key === 'Escape') close();
-      if(e.key === 'ArrowLeft') prev();
-      if(e.key === 'ArrowRight') next();
+      if(e.key==='Escape') close();
+      if(e.key==='ArrowLeft') prev();
+      if(e.key==='ArrowRight') next();
     });
-
-    // Basic mobile swipe
-    let touchStartX = 0, touchEndX = 0;
-    lb.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive:true});
-    lb.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
+    // basic mobile swipe
+    let sx=0, ex=0;
+    lb.addEventListener('touchstart', e=>{ sx=e.changedTouches[0].screenX; }, {passive:true});
+    lb.addEventListener('touchend', e=>{
+      ex=e.changedTouches[0].screenX;
       if(!lb.classList.contains('open')) return;
-      const delta = touchEndX - touchStartX;
-      if (Math.abs(delta) > 40) (delta > 0 ? prev() : next());
+      const d=ex-sx; if(Math.abs(d)>40) (d>0?prev():next());
     }, {passive:true});
+
+    // Build it
+    buildGallery();
   </script>
 </body>
+</html>
+
 </html>
 
 
