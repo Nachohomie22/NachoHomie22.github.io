@@ -6,164 +6,128 @@
   <title>Immaculate Profession's Construction</title>
 
   <style>
-    /* ---- GLOBAL ---- */
-    :root {
-      --accent: #93c5fd;
-      --border: #1e40af;
-      --text:   #e5e7eb;
-      --muted:  #9ca3af;
+    /* ---------- THEME & RESPONSIVE CONSTANTS ---------- */
+    :root{
+      --accent:#93c5fd; --border:#1e40af; --text:#e5e7eb; --muted:#9ca3af;
 
-      /* Logo size used by the bouncing math */
-      --logoW: 320px;   /* increase/decrease to change size */
-      --logoH: 220px;   /* approximate height of your PNG */
-      --ctaH: 60px;     /* sticky contact bar height (top offset) */
+      /* Sticky contact bar height */
+      --ctaH: 64px;
+
+      /* Logo scales by viewport with safe min/max for phone & desktop */
+      --logoW: clamp(200px, 28vw, 360px);
+      /* Approximate aspect ratio of your PNG (tweak if needed) */
+      --logoH: calc(var(--logoW) * 0.70);
     }
-    @media (max-width: 600px) {
-      :root { --logoW: 260px; --logoH: 180px; --ctaH: 60px; }
+    @media (max-width: 420px){
+      :root{ --ctaH: 60px; }
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
+    /* ---------- PAGE BACKGROUND ---------- */
+    html, body{
+      height:100%; margin:0;
       font-family: system-ui, Arial, sans-serif;
-      color: var(--text);
+      color:var(--text);
       background: url('Gallery/background.png') no-repeat center center fixed;
       background-size: cover;
     }
-    /* overlay to deepen contrast */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
+    body::before{
+      content:"";
+      position:fixed; inset:0; z-index:0;
       background: rgba(0,0,0,.55);
-      z-index: 0;
     }
 
-    /* ---- STICKY CONTACT BAR ---- */
-    .cta-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 10;
-      display: flex; gap: .5rem; justify-content: center; align-items: center;
-      padding: .6rem .8rem;
+    /* ---------- STICKY CONTACT BAR ---------- */
+    .cta-bar{
+      position:fixed; top:0; left:0; right:0; height:var(--ctaH);
+      display:flex; gap:.5rem; justify-content:center; align-items:center;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(6px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      z-index:10;
     }
-    .cta-btn {
-      display: inline-block;
-      padding: .6rem 1rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.15);
+    .cta-btn{
+      display:inline-block; padding:.6rem 1rem; border-radius:12px;
+      border:1px solid rgba(255,255,255,.15);
       background: linear-gradient(180deg, rgba(147,197,253,.25), rgba(147,197,253,.15));
-      color: #e5e7eb; text-decoration: none; font-weight: 600;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      color:#e5e7eb; text-decoration:none; font-weight:600;
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+    .cta-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px rgba(0,0,0,.25); }
 
-    /* ---- BOUNCE STAGE (separate layer above content) ---- */
-    .bounce-stage {
-      position: fixed;
-      top: var(--ctaH);   /* keep clear of the contact bar */
-      left: 0; right: 0; bottom: 0;
-      z-index: 6;         /* above content, below CTA */
-      pointer-events: none; /* let clicks pass through to the page */
-      overflow: hidden;     /* keep the logo inside */
+    /* ---------- FULL-SCREEN BOUNCE STAGE (under CTA, above content) ---------- */
+    .bounce-stage{
+      position:fixed;
+      top:var(--ctaH); left:0; right:0; bottom:0;
+      overflow:hidden; pointer-events:none;
+      z-index:6; /* above content, below CTA */
     }
-    .logo {
-      position: absolute;
-      width: var(--logoW);
-      height: auto;          /* actual height approximated by --logoH for animation math */
-      /* smooth glow so it’s visible on dark bg */
+    .logo{
+      position:absolute;
+      width:var(--logoW); height:auto;
+      /* readable on dark bg */
       filter: drop-shadow(0 0 10px #93c5fd) drop-shadow(0 0 18px #60a5fa);
-      /* Independent axis animations avoid “jumping” */
+      /* independent axis animations for smooth “DVD” bounces */
       animation:
-        moveX 11s linear 0s infinite alternate,
-        moveY 9s  linear 0s infinite alternate;
+        moveX 12s linear infinite alternate,
+        moveY 10s linear infinite alternate;
     }
-    /* Travel from 0 to (container - logo) along each axis */
-    @keyframes moveX {
-      from { left: 0; }
-      to   { left: calc(100% - var(--logoW)); }
+    @keyframes moveX{
+      from{ left:0; }
+      to  { left:calc(100% - var(--logoW)); }
     }
-    @keyframes moveY {
-      from { top: 0; }
-      to   { top: calc(100% - var(--logoH)); }
-    }
-
-    /* ---- MAIN CONTENT ---- */
-    main {
-      position: relative;
-      z-index: 1;  /* below the bounce stage */
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: calc(var(--ctaH) + 1.2rem) 1rem 4rem; /* push below contact bar */
+    @keyframes moveY{
+      from{ top:0; }
+      to  { top:calc(100% - var(--logoH)); }
     }
 
-    h1 {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      margin: .25rem 0 0;
-      letter-spacing: .5px;
-      text-align: center;
-    }
-    .tagline {
-      text-align: center;
-      margin: .25rem 0 2rem;
-      color: var(--muted);
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .logo{ animation:none; }
     }
 
-    /* ---- SECTIONS ---- */
-    .card {
+    /* ---------- MAIN CONTENT ---------- */
+    main{
+      position:relative; z-index:1;
+      max-width:1100px; margin:0 auto;
+      padding: calc(var(--ctaH) + 1.2rem) 1rem 4rem;
+    }
+    h1{
+      font-size:clamp(1.8rem,4vw,3rem);
+      margin:.25rem 0 0; letter-spacing:.5px; text-align:center;
+    }
+    .tagline{ text-align:center; margin:.25rem 0 2rem; color:var(--muted); }
+
+    .card{
       background: rgba(0,0,0,.38);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 1.25rem;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px; padding:1.25rem;
       backdrop-filter: blur(4px);
-      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+      box-shadow:0 8px 30px rgba(0,0,0,.25);
     }
-    h2 {
-      margin: 0 0 .75rem;
-      color: var(--accent);
-      font-size: clamp(1.25rem, 3.2vw, 1.6rem);
-      letter-spacing: .5px;
-    }
-    p { line-height: 1.6; }
+    h2{ margin:0 0 .75rem; color:var(--accent); font-size:clamp(1.25rem,3.2vw,1.6rem); letter-spacing:.5px; }
+    p{ line-height:1.6; }
 
-    /* ---- GALLERY ---- */
-    .gallery { margin-top: 2rem; }
-    .pairs {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
+    /* ---------- GALLERY ---------- */
+    .gallery{ margin-top:2rem; }
+    .pairs{
+      display:grid; grid-template-columns:1fr; gap:1rem;
     }
-    @media (min-width: 700px) {
-      .pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width:700px){
+      .pairs{ grid-template-columns:repeat(2, minmax(0,1fr)); }
     }
-    .pair {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .5rem;
-      align-items: start;
+    .pair{
+      display:grid; grid-template-columns:1fr 1fr; gap:.5rem; align-items:start;
     }
-    .pair img {
-      width: 100%;
-      border-radius: 10px;
-      border: 2px solid var(--border);
-      display: block;
-      object-fit: cover;
+    .pair img{
+      width:100%; border-radius:10px; border:2px solid var(--border);
+      display:block; object-fit:cover; background:#0b0f19;
       transition: transform .18s ease, box-shadow .18s ease;
-      background: #0b0f19;
     }
-    .pair img:hover { transform: scale(1.03); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
+    .pair img:hover{ transform:scale(1.03); box-shadow:0 10px 24px rgba(0,0,0,.35); }
 
-    /* ---- FOOTER ---- */
-    footer {
-      margin-top: 3rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: .95rem;
-    }
-    footer p { margin: .25rem 0; }
+    /* ---------- FOOTER ---------- */
+    footer{ margin-top:3rem; text-align:center; color:var(--muted); font-size:.95rem; }
+    footer p{ margin:.25rem 0; }
   </style>
 </head>
 <body>
@@ -174,12 +138,12 @@
     <a class="cta-btn" href="mailto:immaculateprofessions@gmail.com">✉️ Email Us</a>
   </div>
 
-  <!-- Bouncing logo stage (separate layer) -->
+  <!-- Bouncing logo on its own stage -->
   <div class="bounce-stage">
     <img src="Gallery/Logo.png" alt="Immaculate Professions logo" class="logo" />
   </div>
 
-  <!-- Page Content -->
+  <!-- Content -->
   <main>
     <h1>Immaculate Profession's Construction</h1>
     <p class="tagline">Building Your Dreams — Serving the Tri-Cities</p>
